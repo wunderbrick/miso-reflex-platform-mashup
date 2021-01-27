@@ -26,21 +26,7 @@ The hie.yaml and hie-bios.sh make sure ghcide can find everything it needs. hie-
 
 ### Develop with Live Reload (Almost)
 
-Serve static assets for web dev by opening a separate terminal and running: 
-
-`nix-shell -A shells.ghc ./defaultGhc.nix`
-
-`cd app/assets`
-
-`warp -d .`
-
-Next, in your main terminal:
-
-Make sure baseURL in DomHelpers.hs is set to "http://localhost:3000/" for local web dev.
-
 `nix-shell -A shells.ghc ./defaultGhc.nix --run 'ghcid -W -c "cabal --project-file=cabal.project new-repl app" -T Frontend.Frontend.runApp'`
-
-Use the app function in Frontend.Frontend instead of Main.main (the executable) for live reload. If you use Main.main from app-frontend and frontend as the cabal target, updating the library code won't trigger a ghcid reload, only updating Main will since ghcid is focusing on the executable. We still need the separate executables for things like nix-build and Android builds that expect a Main.main. We can't have multiple Main.mains in our library code so we have them split out into separate directories for when we need them with Nix. Similar reasoning applies to live reload with backend code, e.g., if you have Servant functions in some module imported by app-backend/Main, you'll want live reload with the backend code that gets imported into Main instead of the Main.main function itself.
 
 Go to http://localhost:3003/ in your browser. You still have to refresh the page on changes but you get automatic recompilation on saves.
 
@@ -53,14 +39,6 @@ Make sure baseURL in DomHelpers.hs is correct. You can then run:
 Just use the resulting files with your favorite server like you would any other HTML/JS/CSS.
 
 ### Build an Android APK
-
-Make sure baseURL in DomHelpers.hs is set to "file:///android_asset/" for Android assets. 
-
-`cd scripts`
-
-`sh copy-assets-for-android.sh`
-
-`cd ../`
 
 `nix-build -A android.app ./defaultGhc.nix -o result-android`
 
