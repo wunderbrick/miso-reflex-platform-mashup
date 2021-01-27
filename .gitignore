@@ -1,0 +1,6 @@
+dist*
+frontend-result
+**/*.hi
+**/*.o
+.ghc*
+result-android
